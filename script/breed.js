@@ -1,7 +1,7 @@
 const breedArr = getFromStorage("breed")
   ? JSON.parse(getFromStorage("breed"))
   : [];
-const submitBtn = document.getElementById("submit-btn");
+const submitBtn = document.getElementById("submit-btn2");
 const renderTableData = () => {
   tbody.innerHTML = "";
   for (let i = 0; i < breedArr.length; i++) {
