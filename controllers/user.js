@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "../utils/prisma.js"
 
-const prisma = new PrismaClient()
-
-export const getUser = async (req, res) => {
+export const getUsers = async (req, res) => {
 	try {
 		const user = await prisma.user.findMany()
 		res.status(201).send(user)
@@ -13,7 +11,3 @@ export const getUser = async (req, res) => {
 		})
 	}
 }
-
-export const getUsers = () => {}
-export const deleteUser = () => {}
-export const updateUser = () => {}

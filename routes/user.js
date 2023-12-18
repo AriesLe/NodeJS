@@ -1,10 +1,10 @@
 import express from "express"
-import { deleteUser, getUser, updateUser } from "../controllers/user.js"
+import { getUsers } from "../controllers/user.js"
+import { verifyToken } from "../controllers/auth.js"
 
 const router = express.Router()
 
-router.get("/user", getUser)
-router.delete("/user", deleteUser)
-router.put("/user", updateUser)
+// Run verifyToken first to check token is valid or not
+router.get("/user", verifyToken, getUsers)
 
 export default router
