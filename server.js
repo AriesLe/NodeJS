@@ -1,18 +1,26 @@
 import express from "express"
 import dotenv from "dotenv"
+import compression from "compression"
+import cors from "cors"
+import bodyParser from "body-parser"
+
 import userRoute from "./routes/user.js"
 import authRoute from "./routes/auth.js"
 
 dotenv.config()
 
 const app = express()
+
+app.use(cors({ credentials: true }))
 app.use(express.json())
+app.use(compression())
+app.use(bodyParser.json())
 
 //route users
-app.use("/api/v1", userRoute)
+app.use("/api/v1/user", userRoute)
 
 //route authentication
-app.use("/api/v1", authRoute)
+app.use("/api/v1/auth", authRoute)
 
 app.use((err, req, res, next) => {
 	const errorStatus = err.status || 500

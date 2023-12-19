@@ -20,12 +20,15 @@ export const verifyToken = (req, res, next) => {
 export const register = async (req, res, next) => {
 	try {
 		// 1/. Check user is exist or not
-		const { email, username } = req.body
+		const { email, username, password: _password } = req.body
 		const isUserExisted = await prisma.user.findFirst({
 			where: {
 				email,
 			},
 		})
+
+		if (!email || !_password || !username)
+			return next(createError(400, "Require enough fields"))
 
 		// 2/. If exist, báo lỗi đã tồn tại
 		if (isUserExisted)
@@ -36,10 +39,10 @@ export const register = async (req, res, next) => {
 
 		// 3/. Hash password user
 		const salt = bcrypt.genSaltSync(10)
-		const hash = bcrypt.hashSync(req.body.password, salt)
+		const hashPassword = bcrypt.hashSync(_password, salt)
 
 		// 4/. Tạo user lên DB
-		const newUser = { email, username, password: hash }
+		const newUser = { email, username, password: hashPassword }
 		const user = await prisma.user.create({ data: newUser })
 		res.status(200).json({
 			status: true,
@@ -55,6 +58,9 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
 	try {
 		const { email, password: _password } = req.body
+		if (!email || !_password)
+			return next(createError(400, "Require enough fields"))
+
 		// 1/. Check xem có tồn tại email đã register hay chưa, nếu chưa thì trả lỗi
 		const user = await prisma.user.findFirst({ where: { email } })
 		if (!user) return next(createError(403, "Wrong authentication"))
